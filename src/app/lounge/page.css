@@ -12,7 +12,7 @@ layer(components);
 }
 
 :root {
-    --lofi-radio-count: 9;
+    --lofi-radio-count: 8;
 }
 
 @layer components{
@@ -68,6 +68,8 @@ layer(components);
         display: grid;
         justify-items: center;
         column-gap: 2rem;
+        row-gap: 1rem;
+        flex-grow: 1;
     }
 
     .nth {
@@ -104,8 +106,14 @@ h2.h-concerned{
     transition: transform 0.25s ease-in-out;
 }
 
+@property --btn-glow {
+    syntax: "<color>";
+    initial-value: rgb(29, 185, 84, 0);
+    inherits: false;
+}
+
 .item *.selected, .round-btn:hover{
-    box-shadow: 0 0 10px 0.5rem #1DB954;   
+    --btn-glow: rgb(29, 185, 84, 1);
 }
 
 .radio-name.selected{
@@ -116,20 +124,97 @@ h2.h-concerned{
 .round-btn{
     border-radius: 9999px;
     background-color: #1DB954;
+    box-shadow: 0 0 10px 0.5rem var(--btn-glow);
     padding: 1rem;
+    transition: --btn-glow 0.1s ease-in-out;
 }
 
 .conveyor{
     mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent);
 }
 
+.conveyor::-webkit-scrollbar{
+    display: initial;
+    height: 5px;
+}
+
 .conveyor .belt{
     display: grid;
+    grid-template-rows: 356px;
     grid-template-columns: repeat(var(--lofi-radio-count), 1fr);
-    column-gap: 1rem;
+    gap: 1rem;
     width: 100%;
     height: 100%;
-    animation: conveyor-belt calc(var(--lofi-radio-count) * 5s) linear infinite alternate;
+    animation: horizontal-conveyor-belt calc(var(--lofi-radio-count) * 5s) linear infinite alternate;
+}
+
+@media (min-height: 1000px), (max-width: 640px){
+    .conveyor#lofi-radios{
+        mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+    }
+    /* .conveyor{
+        mask-image: linear-gradient(to right, transparent, black 20%, black 80%, transparent),
+        linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+        mask-composite: intersect;
+    } */
+    .conveyor#lofi-radios .belt{
+        justify-content: center;
+        grid-template-columns: 450px;
+        grid-template-rows: repeat(var(--lofi-radio-count), 1fr);
+        animation: vertical-conveyor-belt calc(var(--lofi-radio-count) * 5s) linear infinite alternate;
+    }
+}
+
+._90deg-flipped-ccw-text{
+    position: relative;
+    width: 40px;
+    height: 295px; /* desired visual height after rotation */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+._90deg-flipped-ccw-text .body-text{
+    position: absolute;
+    left: 40px;
+    bottom: 0px;
+    width: 295px;   /* this becomes the visual height after rotation */
+    height: 40px; /* this becomes the visual width after rotation */
+    transform: rotate(-90deg);
+    transform-origin: left bottom;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vr{
+    border: 2px solid white;
+    mask-image: linear-gradient(transparent, black 30%, black 70%, transparent);
+    margin-left: 1.5rem;
+    height: 295px;
+}
+
+@media (max-width: 640px) {
+    .conveyor#playlists {
+        mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+    }
+    ._90deg-flipped-ccw-text {
+        height: 40px;
+        width: 295px;
+    }
+    ._90deg-flipped-ccw-text .body-text {
+        left: 0;
+        transform: rotate(0deg);
+    }
+    .vr{
+        margin-left: 0;
+        margin-top: 1.5rem;
+        margin-bottom: 1rem;
+        mask-image: linear-gradient(to right, transparent, black 30%, black 70%, transparent);
+        width: 295px;
+        height: 0;
+    }
 }
 
 .conveyor .belt .item.lrc {
@@ -139,10 +224,14 @@ h2.h-concerned{
     cursor: pointer;
 }
 
-@keyframes conveyor-belt {
+@keyframes horizontal-conveyor-belt {
     0% { transform: translateX(calc(450px + 1rem)); }
     100% { transform: translateX(calc(-1 * (var(--lofi-radio-count) - 2) * (450px + 1rem))); }
-    
+}
+
+@keyframes vertical-conveyor-belt {
+    0% { transform: translateY(calc(450px + 1rem)); }
+    100% { transform: translateY(calc(-1 * (var(--lofi-radio-count) - 2) * (450px + 1rem))); }
 }
 
 img#smile-listen-to-music{
@@ -400,35 +489,6 @@ img#falling-book{
     rotate: -30deg;
 }
 
-._90deg-flipped-ccw-text{
-    position: relative;
-    width: 40px;
-    height: 295px; /* desired visual height after rotation */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
-
-._90deg-flipped-ccw-text .body-text{
-    position: absolute;
-    left: 40px;
-    bottom: 0px;
-    width: 295px;   /* this becomes the visual height after rotation */
-    height: 40px; /* this becomes the visual width after rotation */
-    transform: rotate(-90deg);
-    transform-origin: left bottom;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.vr{
-    border: 2px solid white;
-    mask-image: linear-gradient(transparent, black 30%, black 70%, transparent);
-    margin-left: 1.5rem
-}
-
 .lrc[popover]:popover-open:not(dialog) .lofi-radio {
     max-width: unset;
     width: 100vw;
@@ -444,3 +504,126 @@ img#falling-book{
 .lrc[popover]:popover-open:not(dialog) .radio-name{
     display: none;
 }
+
+span#rainbow-text {
+    background-clip: text;
+    background-image: linear-gradient(to left, 
+        var(--rainbow-color-1), 
+        var(--rainbow-color-2), 
+        var(--rainbow-color-3), 
+        var(--rainbow-color-4), 
+        var(--rainbow-color-5), 
+        var(--rainbow-color-6), 
+        var(--rainbow-color-7)
+    );
+    animation: rainbow 2s infinite linear forwards;
+    transition: color 0.5s linear
+}
+
+span#rainbow-text:hover{
+    color: rgba(0,0,0,0) !important;
+    animation-play-state: running;
+}
+
+@property --rainbow-color-1 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: red;
+}
+@property --rainbow-color-2 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: orange;
+}
+@property --rainbow-color-3 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: yellow;
+}
+@property --rainbow-color-4 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: green;
+}
+@property --rainbow-color-5 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: blue;
+}
+@property --rainbow-color-6 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: indigo;
+}
+@property --rainbow-color-7 {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: blueviolet;
+}
+
+@keyframes rainbow {
+    0% { 
+        --rainbow-color-1: red;
+        --rainbow-color-2: orange;
+        --rainbow-color-3: yellow;
+        --rainbow-color-4: green;
+        --rainbow-color-5: blue;
+        --rainbow-color-6: indigo;
+        --rainbow-color-7: blueviolet;
+    }
+    14% {
+        --rainbow-color-1: orange;
+        --rainbow-color-2: yellow;
+        --rainbow-color-3: green;
+        --rainbow-color-4: blue;
+        --rainbow-color-5: indigo;
+        --rainbow-color-6: blueviolet;
+        --rainbow-color-7: red;
+    }
+    28% {
+        --rainbow-color-1: yellow;
+        --rainbow-color-2: green;
+        --rainbow-color-3: blue;
+        --rainbow-color-4: indigo;
+        --rainbow-color-5: blueviolet;
+        --rainbow-color-6: red;
+        --rainbow-color-7: orange;
+    }
+    42% {
+        --rainbow-color-1: green;
+        --rainbow-color-2: blue;
+        --rainbow-color-3: indigo;
+        --rainbow-color-4: blueviolet;
+        --rainbow-color-5: red;
+        --rainbow-color-6: orange;
+        --rainbow-color-7: yellow;
+    }
+    56% {
+        --rainbow-color-1: blue;
+        --rainbow-color-2: indigo;
+        --rainbow-color-3: blueviolet;
+        --rainbow-color-4: red;
+        --rainbow-color-5: orange;
+        --rainbow-color-6: yellow;
+        --rainbow-color-7: green;
+    }
+    70% {
+        --rainbow-color-1: indigo;
+        --rainbow-color-2: blueviolet;
+        --rainbow-color-3: red;
+        --rainbow-color-4: orange;
+        --rainbow-color-5: yellow;
+        --rainbow-color-6: green;
+        --rainbow-color-7: blue;
+    }
+    84% {
+        --rainbow-color-1: blueviolet;
+        --rainbow-color-2: red;
+        --rainbow-color-3: orange;
+        --rainbow-color-4: yellow;
+        --rainbow-color-5: green;
+        --rainbow-color-6: blue;
+        --rainbow-color-7: indigo;
+    }
+}
+

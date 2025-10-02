@@ -7,11 +7,8 @@ import { useLoadingState } from "@/glient/loading";
 import Client from "@/glient/util";
 import Neutral from"@/geutral/util";
 import EmailVerifificationPage from "./email-verification";
-import Cookies from "universal-cookie";
 
 export default function SignUp() {
-    const cookies = new Cookies();
-
     const { Switch, Dynamic } = Client.Components;
     const { AlertBox, InputField, InputGroupField } = Dynamic;
 

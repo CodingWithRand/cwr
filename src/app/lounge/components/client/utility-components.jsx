@@ -57,7 +57,7 @@ export function useMusic(){
 
 export function CategoryTitle({ text, fontSize }){
     return(
-        <div className="flex">
+        <div className="flex items-center flex-col sm:flex-row sm:items-start">
             <div className="ml-4 text-white _90deg-flipped-ccw-text">
                 <div className="body-text" style={{ fontSize: fontSize ? fontSize : "2rem" }}>
                     {text}

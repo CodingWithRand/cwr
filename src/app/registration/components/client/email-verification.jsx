@@ -25,7 +25,7 @@ export default function EmailVerifificationPage(props) {
             console.log('verified');
             window.location.replace("/")
         }
-    }, [authUser.isAuthUser], 1000)
+    }, [authUser.isAuthUser], 2000)
     
     useEffect(() => {
         (async () => {

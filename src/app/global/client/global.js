@@ -21,10 +21,12 @@ export function Global({ children }){
   
   const [theme, setTheme] = useState("default-os");
   const [onExceptionPage, setOnExceptionPage] = useState(false);
-  const [device, detectDevice] = useState("pc");
+  const [device, detectDevice] = useState("");
+  const [windowSize, setWindowSize] = useState([0, 0]);
 
   useEffect(() => {
     function detectingDevice(){
+      setWindowSize([window.innerWidth, window.innerHeight]);
       if(window.innerWidth < 640) detectDevice("xs")
       else if(window.innerWidth < 768) detectDevice("sm")
       else if(window.innerWidth < 1024) detectDevice("md")
@@ -52,7 +54,8 @@ export function Global({ children }){
       authUser: {isAuthUser},
       authEvent: {authEvent},
       exceptionPage: {onExceptionPage, setOnExceptionPage},
-      device: {device, detectDevice}
+      device: {device},
+      winSize: {windowSize},
     }}>
       {children}
     </GlobalState.Provider>

@@ -4,7 +4,14 @@ import "./page.css";
 import Client from "@/glient/util";
 import { useEffect } from "react";
 import Neutral from "@/geutral/util";
-import { LofiRadios, RadioToast, MusicLibrary, BookShelf, MusicLibraryDialog } from "./components/client/constructor-components";
+import {
+  LofiRadios,
+  RadioToast,
+  MusicLibrary,
+  MusicLibraryDialog,
+  MyMusicPlayer
+} from "./components/client/constructor-components/music";
+import { BookShelf } from "./components/client/constructor-components/books";
 import { MusicStateProvider } from "./components/client/utility-components";
 import Script from "next/script";
 import { useGlobal } from "@/glient/global";
@@ -82,12 +89,18 @@ export default function Lounge() {
               <h1 id="music-on-your-demand" className="relative z-[2] art-text py-[1em] md:py-[2em] font-bangers text-3xl nmob:text-4xl sm:text-5xl md:text-6xl lg:text-7xl text-[#1DB954]">Music on your demand!</h1>
             </div>
             {
-              !(authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at) &&
+              // Development
+              (authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at) &&
+              // Production
+              // !(authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at) &&
               <div className="w-full absolute bottom-0 h-full z-[4]" style={{ backdropFilter: 'blur(1rem)' }}></div>
             }
           </div>
-          {
-              !(authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at) &&
+          {   
+              // Development
+              (authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at) &&
+              // Production
+              // !(authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at) &&
               <div className="z-[5] locked">
                   <h1>Sign up for more access!</h1>
                   <div className="flex flex-row items-center gap-x-8 my-8">
@@ -98,13 +111,18 @@ export default function Lounge() {
           }
         </section>
         {
-          (authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at) && <>
+          // Development
+          !(authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at) && 
+          // Production
+          // (authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at) && 
+          <>
             <section id="music">
               <Coroussel
-                totalPages={2}
+                totalPages={3}
                 corousselElements={[
                   <LofiRadios key={1} />,
                   <MusicLibrary key={2} />,
+                  <MyMusicPlayer key={3} />
                 ]}
                 corousselWrappersStyle={[
                   

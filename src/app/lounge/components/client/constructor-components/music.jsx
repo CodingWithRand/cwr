@@ -1,9 +1,8 @@
-import { Application, extend } from "@pixi/react";
-import { Container, Graphics, Sprite, Texture, Assets, Rectangle, v8_0_0 } from "pixi.js";
+
 
 import Client from "@/glient/util";
 import { useRef, useState, useEffect } from "react";
-import musicId from "../musicId.json";
+import musicId from "../../musicId.json";
 import { Direction, Range } from "react-range";
 import { useGlobal } from "@/glient/global";
 import { 
@@ -15,15 +14,8 @@ import {
     PlaylistLibCard,
     MusicLibraryCard,
     MusicCard,
-    Book,
     CategoryTitle
-} from "./utility-components";
-
-extend({
-    Container,
-    Graphics,
-    Sprite,
-})
+} from "../utility-components";
 
 function LofiRadio({ id, src, functions }){
     return (
@@ -38,8 +30,8 @@ function LofiRadio({ id, src, functions }){
                     id === "pp-fs" ? "Peacful Piano - Focus/Study" : 
                     id === "medieval" ? "Medieval - Medieval" : 
                     id === "s-cg" ? "Synthwave - Chill/Gaming" : 
-                    id === "j-cs" ? "Jazz - Chill/Study" : 
-                    id === "s-cs" ? "Summer - Chill beats for sunny days" : ""
+                    id === "j-cs" ? "Jazz - Chill/Study" : ""
+                    // id === "s-cs" ? "Summer - Chill beats for sunny days" : ""
                 }</h3>
                 <button id={id} className="round-btn control-btn" onClick={(e) => functions.play(e, id)} onMouseEnter={functions.selection} onMouseLeave={functions.deselection}>
                     <img id={id} className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
@@ -91,9 +83,9 @@ export function LofiRadios(){
             case "Jazz - Chill/Study":
                 iframeId = "j-cs";
                 break;
-            case "Summer - Chill beats for sunny days":
-                iframeId = "s-cs";
-                break;
+            // case "Summer - Chill beats for sunny days":
+            //     iframeId = "s-cs";
+            //     break;
         }
         setIsIframePlaying((prev) => ({ ...prev, [iframeId]: isPlaying.state }));
     }, [isPlaying.playlist, isPlaying.music]);
@@ -149,9 +141,9 @@ export function LofiRadios(){
             case "j-cs":
                 setIsPlaying((prev) => ({...prev, playlist: "Jazz", music: "Chill/Study", state, category: "Lofi Radio", subcategory: undefined }));
                 break;
-            case "s-cs":
-                setIsPlaying((prev) => ({...prev, playlist: "Summer", music: "Chill beats for sunny days", state, category: "Lofi Radio", subcategory: undefined }));
-                break;
+            // case "s-cs":
+            //     setIsPlaying((prev) => ({...prev, playlist: "Summer", music: "Chill beats for sunny days", state, category: "Lofi Radio", subcategory: undefined }));
+            //     break;
         }
       }
 
@@ -206,13 +198,13 @@ export function LofiRadios(){
                 <Image id="lofi-girl" alt="lofi-girl" name="lofi-girl.png" dir="icon/" constant />
                 Lofi Radio
             </h2>
-            <div className="conveyor h-[60%] w-full">
+            <div className="conveyor h-[60%] w-full" id="lofi-radios">
                 <div className="belt">
                     <LofiRadio id="hh-rs" src="https://www.youtube.com/embed/jfKfPfyJRdk" functions={{ play, selection, deselection }} />
                     <LofiRadio id="hh-sc" src="https://www.youtube.com/embed/28KRPhVzCus" functions={{ play, selection, deselection }} />
                     <LofiRadio id="a-rs" src="https://www.youtube.com/embed/Na0w3Mz46GA" functions={{ play, selection, deselection }} />
                     <LofiRadio id="pp-fs" src="https://www.youtube.com/embed/TtkFsfOP9QI" functions={{ play, selection, deselection }} />
-                    <LofiRadio id="s-cs" src="https://www.youtube.com/embed/SXySxLgCV-8" functions={{ play, selection, deselection }} />
+                    {/* <LofiRadio id="s-cs" src="https://www.youtube.com/embed/SXySxLgCV-8" functions={{ play, selection, deselection }} /> */}
                     <LofiRadio id="j-cs" src="https://www.youtube.com/embed/HuFYqnbVbzY" functions={{ play, selection, deselection }} />
                     <LofiRadio id="s-rd" src="https://www.youtube.com/embed/P6Segk8cr-c" functions={{ play, selection, deselection }} />
                     <LofiRadio id="medieval" src="https://www.youtube.com/embed/IxPANmjPaek" functions={{ play, selection, deselection }} />
@@ -225,6 +217,7 @@ export function LofiRadios(){
 
 export function MusicLibrary(){
     const { Image } = Client.Components.Dynamic
+    const { winSize, device } = useGlobal();
     const { isPlayingState, speakerUID, player } = useMusic();
     const { isPlaying, setIsPlaying } = isPlayingState;
     const { speakerUniqueId, setSpeakerUniqueId } = speakerUID;
@@ -246,16 +239,28 @@ export function MusicLibrary(){
     }
 
     return(
-        <div className="flex flex-col items-center h-full relative">
+        <div className="flex flex-col items-center h-[90%] relative">
             <h2 className="text-[#9b3331] font-comic-relief py-16 text-center text-5xl nmob:text-6xl sm:text-7xl md:text-8xl lg:text-9xl">
                 Music Library
             </h2>
-            <div className="conveyor overflow-auto" id="playlists" style={{ gridTemplateColumns: `repeat(${
-                Object.keys(musicId).length +
-                Object.keys(musicId.BGM).length +
-                Object.keys(musicId["Game OST"]).length +
-                Object.keys(musicId["Other OST"]).length
-            }, 1fr)` }}>
+            <div className="conveyor overflow-auto" id="playlists" style={{
+                justifyContent: (winSize.windowSize[1] >= 1000 && winSize.windowSize[0] >= 2500) || device.device === "xs" ? "center" : undefined, //Still have to manually adjust the condition.
+                gridTemplateColumns: device.device === "xs" ? "200px" : `repeat(${
+                    Math.ceil((Object.keys(musicId).length +
+                    Object.keys(musicId.BGM).length +
+                    Object.keys(musicId["Game OST"]).length +
+                    Object.keys(musicId["Other OST"]).length)
+                    /
+                    (winSize.windowSize[1] >= 1000 ? Math.floor((winSize.windowSize[1] - 750) / 300) + 1 : 1))
+                }, 200px)`,
+                gridTemplateRows: 
+                    device.device === "xs" ? `repeat(${
+                        Object.keys(musicId).length +
+                        Object.keys(musicId.BGM).length +
+                        Object.keys(musicId["Game OST"]).length +
+                        Object.keys(musicId["Other OST"]).length
+                    }` : `repeat(${winSize.windowSize[1] >= 1000 ? Math.floor((winSize.windowSize[1] - 750) / 300) + 1 : 1}, 1fr)`
+            }}>
                 <CategoryTitle text="Background Music" />
                 <PlaylistLibCard cate="BGM" name="Vindsvept" backdropColor="#402726" />
                 <CategoryTitle text="Game OST" />
@@ -315,7 +320,8 @@ export function RadioToast(){
     }, [isPlaying.state], 100)
 
     useEffect(() => {
-        if(!authUser.isAuthUser && !authUser.isAuthUser?.email_confirmed_at) return;
+        // Comment below if in development
+        // if(!authUser.isAuthUser && !authUser.isAuthUser?.email_confirmed_at) return;
         if (!isPlaying.state){
             document.querySelector(".belt").style.animationPlayState = "running";
             document.querySelectorAll(".control-btn-icon").forEach((cbi) => {
@@ -341,7 +347,8 @@ export function RadioToast(){
     }, [isPlaying.state, isPlaying.category])
 
     useEffect(() => {
-        if(!authUser.isAuthUser && !authUser.isAuthUser?.email_confirmed_at) return;
+        // Comment below if in development
+        // if(!authUser.isAuthUser && !authUser.isAuthUser?.email_confirmed_at) return;
         let showNameTimeout;
         let hideNameTimeout;
         if(device.device !== "lg" && device.device !== "xl" && device.device !== "2xl"){
@@ -385,9 +392,9 @@ export function RadioToast(){
             case "Jazz - Chill/Study":
                 iframeId = "j-cs";
                 break;
-            case "Summer - Chill beats for sunny days":
-                iframeId = "s-cs";
-                break;
+            // case "Summer - Chill beats for sunny days":
+            //     iframeId = "s-cs";
+            //     break;
             default:
                 iframeId = "speaker";
         }
@@ -582,158 +589,21 @@ export function MusicLibraryDialog(){
     )
 }
 
-export function BookShelf(){
-    const defaultSpriteSizes = {
-        container: {
-            width: 550,
-            height: 560
-        },
-        shelf: {
-            s1: {
-                width: 530,
-                height: 120
-            }
-        },
-        bookshelf: 0.125
-    }
-    const parent = useRef(null);
-    const { device } = useGlobal();
-    const [ textures, setTextures ] = useState(Texture.EMPTY);
-    const [ spriteSizes, setSpriteSizes ] = useState(defaultSpriteSizes);
-    const [ dialogPos, setDialogPos ] = useState({ x: 0, y: 0 });
-    const [ bookMetadata, setBookMetadata ] = useState({
-        title: "",
-        link: ""
-    });
-
-    function showBookCover(e, title, link){
-        e.stopPropagation();
-        const { x, y } = e.data.global;
-        setDialogPos({ x: x, y: y - 50 });
-        setBookMetadata({ title, link });
-        document.getElementById("link-dialog").show();
-    }
-
-    useEffect(() => {
-        (async () => {
-            await Assets.init({ manifest: "/asset-bundles-manifest.json" })
-            if (textures === Texture.EMPTY) {
-                Assets
-                    .loadBundle("library")
-                    .then((loaded) => {
-                        setTextures(loaded)
-                    })
-            }
-        })()
-    }, []);
-
-    useEffect(() => {
-        if (device.device === "sm"){
-            setSpriteSizes((prev) => ({
-                ...prev, 
-                container: {
-                    width: 438,
-                    height: 535
-                },
-                bookshelf: 0.1
-            }))
-        } else if (device.device === "xs"){
-            setSpriteSizes((prev) => ({
-                ...prev, 
-                container: {
-                    width: 329,
-                    height: 400
-                },
-                bookshelf: 0.075
-            }))
-        } else {
-            setSpriteSizes(defaultSpriteSizes)
-        }
-    }, [device.device])
-
-
-    return (
-        <>
-            <div className="relative" ref={parent} style={{ width: `${spriteSizes.container.width}px`, height: `${spriteSizes.container.height}px`, boxShadow: "0 1rem 4rem black" }}>
-                <Application resizeTo={parent}>
-                    { textures.bookshelf && 
-                        <pixiContainer x={0} y={0}
-                            interactive={true}
-                            hitArea={new Rectangle(0, 0, spriteSizes.container.width, spriteSizes.container.height)}
-                            onClick={() => document.getElementById("link-dialog").close()}
-                            onTap={() => document.getElementById("link-dialog").close()}
-                        >
-                            <pixiSprite
-                                texture={textures.bookshelf}
-                                x={0} y={0}
-                                scale={spriteSizes.bookshelf}
-                            />
-                            <pixiContainer 
-                                x={10} y={10} 
-                                width={spriteSizes.shelf.s1.width} 
-                                height={spriteSizes.shelf.s1.height}
-                                cursor="pointer"
-                        
-                            >
-                                <Book
-                                    side="left"
-                                    position={{ x: 50, y: 50 }} 
-                                    thickness={30}
-                                    height={70}
-                                    color={{
-                                        cover: 0x3366cc,
-                                        spine: 0x254080,
-                                        front: 0x99bbff
-                                    }}
-                                    event={{
-                                        onClick: (e) => showBookCover(
-                                            e, 
-                                            "My Gift LVL 9999 Unlimited Gacha Manga", 
-                                            "https://mygiftlvl9999unlimitedgacha.com/"
-                                        ),
-                                        onTap: () => showBookCover(
-                                            e, 
-                                            "My Gift LVL 9999 Unlimited Gacha Manga", 
-                                            "https://mygiftlvl9999unlimitedgacha.com/"
-                                        )
-                                    }}
-                                />
-                                <Book
-                                    side="right"
-                                    position={{ x: 150, y: 40 }}
-                                    thickness={15}
-                                    height={80} 
-                                    color={{
-                                        cover: 0xff0000,
-                                        spine: 0x800000,
-                                        front: 0xff6666
-                                    }}
-                                    event={{
-                                        onClick: (e) => showBookCover(
-                                            e, 
-                                            "Chronicles of an Aristocrat Reborn in Another World", 
-                                            "https://comick.io/comic/tensei-kizoku-no-isekai-boukenroku-jichou-wo-shiranai-kamigami-no-shito"
-                                        ),
-                                        onTap: () => showBookCover(
-                                            e, 
-                                            "Chronicles of an Aristocrat Reborn in Another World", 
-                                            "https://comick.io/comic/tensei-kizoku-no-isekai-boukenroku-jichou-wo-shiranai-kamigami-no-shito"
-                                        )
-                                    }}
-                                />
-                            </pixiContainer>
-                        </pixiContainer>
-                    }
-                </Application>
-                <dialog id="link-dialog" style={{ top: `${dialogPos.y}px`, left: `${dialogPos.x}px` }} >
-                    <div className="w-[10vw]">
-                        <a href={bookMetadata.link} target="_blank">{bookMetadata.title}</a>
+export function MyMusicPlayer() {
+    return <>
+        <div className="flex flex-col items-center h-full relative">
+            <h2 className="text-[#e96d6b] font-comic-relief py-16 text-center text-3xl nmob:text-4xl sm:text-5xl md:text-6xl lg:text-8xl">
+                Play your own <span id="rainbow-text">music</span>
+            </h2>
+            <div>
+                <div className="w-[400px] h-[400px] bg-white/50 flex items-center justify-center">
+                    <div className="w-[90%] h-[90%] flex items-center justify-center" style={{
+                        border: "5px dashed white"
+                    }}>
+                        <span className="text-white font-comic-relief text-8xl">+</span>
                     </div>
-                </dialog>
+                </div>
             </div>
-            <div className="text-white" style={{ position: "absolute", bottom: 0, left: 0 }}>
-                Sorry for the inconvenience, but I can&apos;t really embed manga iframe to this site. It&apos;s about copyright infringement stuff.
-            </div>
-        </>
-    )
+        </div>
+    </>
 }

@@ -18,7 +18,10 @@
         document.querySelector(".subtitle").style.transform = "scale(1, 0.8)";
         setTimeout(() => {
             document.querySelector("#logo").style.transform = "scale(0.1)";
-            document.querySelector("#logo").style.top = "-46.5%";
+            document.querySelector("#logo").style.top = `-${((document.getElementById("banner").scrollHeight/2) - (document.getElementById("navbar").scrollHeight/2))}px`;
+            window.addEventListener("resize", () => {
+                document.querySelector("#logo").style.top = `-${((document.getElementById("banner").scrollHeight/2) - (document.getElementById("navbar").scrollHeight/2))}px`;
+            })
         }, 2000);
         setTimeout(() => {
             document.querySelector("#dice").classList.add("shake");

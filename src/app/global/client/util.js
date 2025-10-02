@@ -435,7 +435,7 @@ function CWRFooter({ arbitraryCSSRules }){
             <h1>Powered by</h1>
             <ul>
                 <li><Image dir="icon/" name="vercel.png" constant alt="vercel-logo" width={20} height={20}/>&nbsp;<a href="https://vercel.com" target="_blank">Vercel</a></li>
-                <li><Image dir="icon/" name="fb.png" constant alt="firebase-logo" width={20} height={20}/>&nbsp;<a href="https://firebase.google.com" target="_blank">Firebase</a></li>
+                <li><Image dir="icon/" name="supabase.png" constant alt="supabase-logo" width={20} height={20}/>&nbsp;<a href="https://supabase.com/" target="_blank">Supabase</a></li>
                 <li><Image dir="icon/" name="github.svg" constant alt="github-logo" width={20} height={20}/>&nbsp;<a href="https://github.com" target="_blank">GitHub</a></li>
                 <li><Image dir="icon/" name="render.png" alt="render-logo" width={20} height={20}/>&nbsp;<a href="https://render.com" target="_blank">Render</a></li>
             </ul>

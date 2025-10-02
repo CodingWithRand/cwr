@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useGlobal } from "@/glient/global";
-import { storage, supabase } from "@/glient/supabase";
+import { storage } from "@/glient/supabase";
 import Client from "@/app/global/client/util";
 
 const { Section } = Client.Components.Dynamic;

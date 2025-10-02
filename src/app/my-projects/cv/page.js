@@ -32,7 +32,7 @@ export default function MyCV() {
       </nav>
       <header>
         <div className="font-roboto-mono text-center">
-          <span className="inline-block dq-left">"</span>
+          <span className="inline-block dq-left">&quot;</span>
           <div className="inline-block animated-text">
             <span className="inline-block">YOUNG</span> 
           </div>
@@ -42,7 +42,7 @@ export default function MyCV() {
           </div>
           <span>&nbsp;</span>
           <span>Junior Developer</span>
-          <span className="inline-block dq-right">"</span>
+          <span className="inline-block dq-right">&quot;</span>
         </div>
       </header>
       <main>
@@ -347,7 +347,7 @@ export default function MyCV() {
             </div>
             <div className="pbc flex flex-col">
               <div className="experience">
-                <h3 className="font-roboto-mono e-title">Robot Club's Booth Staff</h3>
+                <h3 className="font-roboto-mono e-title">Robot Club&apos;s Booth Staff</h3>
                 <h4 className="font-roboto-mono">Chongfah Sinseung Wanichbamrung School</h4>
                 <div className="flex flex-row addi-details">
                   <div className="flex flex-row items-center">
@@ -362,7 +362,7 @@ export default function MyCV() {
                 <p>My duties were setting up the booth, monitoring overall in-booth activities, answering questions from visitors, and teaching children to play minigames in the booth.</p>
               </div>
               <div className="experience">
-                <h3 className="font-roboto-mono e-title">NSC Project's Leader</h3>
+                <h3 className="font-roboto-mono e-title">NSC Project&apos;s Leader</h3>
                 <div className="flex flex-row addi-details">
                   <div className="flex flex-row items-center">
                     <img src="/imgs/backend-images/cv/calendar.svg" alt="calendar"></img>
@@ -409,7 +409,7 @@ export default function MyCV() {
                 <div className="project flex flex-col items-center">
                   <img src="/imgs/backend-images/coroussel/projects/wallpaper-6.png" alt="glam up my mark up"></img>
                   <a href="https://github.com/CodingWithRand/DEV.to-challenge" target="_blank" className="font-roboto-mon text-centero">Camp Activities Inquiry</a>
-                  <p>A project submitted to participate in the first challenge of <a href="https://dev.to/devteam/join-our-first-community-challenge-the-frontend-challenge-8be" style={{ color: "red" }}><b>"The Frontend Challenge"</b></a> by <a href="https://dev.to"><b>Dev.to</b></a></p>
+                  <p>A project submitted to participate in the first challenge of <a href="https://dev.to/devteam/join-our-first-community-challenge-the-frontend-challenge-8be" style={{ color: "red" }}><b>&quot;The Frontend Challenge&quot;</b></a> by <a href="https://dev.to"><b>Dev.to</b></a></p>
                 </div>
               </div>
             </div>
@@ -435,9 +435,9 @@ export default function MyCV() {
             </div>
           </div>
           <p id="quote" className="text-center font-roboto-mono">
-            <span className="inline-block dq-left">"</span>
+            <span className="inline-block dq-left">&quot;</span>
             <i>Time is precious, so manage it wisely.</i>
-            <span className="inline-block dq-right">"</span>
+            <span className="inline-block dq-right">&quot;</span>
           </p>
         </section>
       </main>
