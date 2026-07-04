@@ -2,100 +2,112 @@
 @config "../../../tailwind.config.js";
 
 @layer components {
-    h1.title {
-      @apply text-2xl sm:text-4xl md:text-6xl lg:text-8xl;
-    }
-    .title.thringo {
-      @apply text-blue-400;
-      -webkit-text-stroke-width: 2px;
-      -webkit-text-stroke-color: rgb(59 130 246);
-      text-shadow: 0 0 2rem rgb(188, 214, 255);
-    }
+  h1.title {
+    @apply text-2xl sm:text-4xl md:text-6xl lg:text-8xl;
   }
+  .title.thringo {
+    @apply text-blue-400;
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: rgb(59 130 246);
+    text-shadow: 0 0 2rem rgb(188, 214, 255);
+  }
+}
 
-  h2.subtitle {
-      @apply sm:text-lg md:text-xl lg:text-2xl;
-    }
-    .subtitle.thringo {
-      @apply text-blue-400;
-      text-shadow: 0 0 2rem rgb(59 130 246);
-    }
+h2.subtitle {
+  @apply sm:text-lg md:text-xl lg:text-2xl;
+}
+.subtitle.thringo {
+  @apply text-blue-400;
+  text-shadow: 0 0 2rem rgb(59 130 246);
+}
 
-  p.development-status {
-      @apply sm:text-lg md:text-xl lg:text-2xl;
-    }
+p.development-status {
+  @apply sm:text-lg md:text-xl lg:text-2xl;
+}
 
-    a.learn-more {
-      @apply sm:text-lg md:text-xl lg:text-2xl;
-    }
-    .learn-more.thringo {
-      @apply text-blue-400;
-      text-shadow: 0 0 2rem rgb(59 130 246);
-    }
+a.learn-more {
+  @apply sm:text-lg md:text-xl lg:text-2xl;
+}
+.learn-more.thringo {
+  @apply text-blue-400;
+  text-shadow: 0 0 2rem rgb(59 130 246);
+}
 
 p.description {
-      @apply lg:text-lg;
-      max-height: 50vh;
-    }
-
-
-    .thringo.title {
-      @apply text-blue-400;
-      -webkit-text-stroke-width: 2px;
-      -webkit-text-stroke-color: rgb(59 130 246);
-      text-shadow: 0 0 2rem rgb(188, 214, 255);
-    }
-    .thringo.subtitle {
-      @apply text-blue-400;
-      text-shadow: 0 0 2rem rgb(59 130 246);
-    }
-   .thringo.learn-more {
-      @apply text-blue-400;
-      text-shadow: 0 0 2rem rgb(59 130 246);
-    }
-
-
-html{ overflow-x: hidden; width: auto; height: auto; }
-body{width: auto; height: auto;}
-#navbar{ position: relative !important; }
-dd{ margin-inline-start: 40px; }
-dt{ font-size: x-large; }
-
-.intro-page{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    row-gap: 1rem;
-    height: 100%;
-    padding: 12vw;
-    text-align: center;
+  @apply lg:text-lg;
+  max-height: 50vh;
 }
 
-.cwr-education{
-    color: rgb(200, 255, 255);
-    text-shadow: 0 0 1rem rgb(0, 255, 255);
+.thringo.title {
+  @apply text-blue-400;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: rgb(59 130 246);
+  text-shadow: 0 0 2rem rgb(188, 214, 255);
+}
+.thringo.subtitle {
+  @apply text-blue-400;
+  text-shadow: 0 0 2rem rgb(59 130 246);
+}
+.thringo.learn-more {
+  @apply text-blue-400;
+  text-shadow: 0 0 2rem rgb(59 130 246);
 }
 
-p.development-status, a.visit-site{
-    opacity: 0.8;
-    color: white;
-    text-shadow: 0 0 1rem rgb(200, 200, 200);
+html {
+  overflow-x: hidden;
+  width: auto;
+  height: auto;
+}
+body {
+  width: auto;
+  height: auto;
+}
+#navbar {
+  position: relative !important;
+}
+dd {
+  margin-inline-start: 40px;
+}
+dt {
+  font-size: x-large;
 }
 
-a.visit-site{
-    font-size: 3rem;
+.intro-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  row-gap: 1rem;
+  height: 100%;
+  padding: 12vw;
+  text-align: center;
 }
 
-#devto-project-name{
-    font-family: "Carter One", system-ui;
-    font-weight: 400;
-    font-style: normal;
-    text-shadow: 0 0 1rem rgb(255, 255, 255);
+.cwr-education {
+  color: rgb(200, 255, 255);
+  text-shadow: 0 0 1rem rgb(0, 255, 255);
 }
 
-@media (max-width:640px){
-    p.description{
-        overflow: auto;
-    }
+p.development-status,
+a.visit-site {
+  opacity: 0.8;
+  color: white;
+  text-shadow: 0 0 1rem rgb(200, 200, 200);
+}
+
+a.visit-site {
+  font-size: 3rem;
+}
+
+#devto-project-name {
+  font-family: "Carter One", system-ui;
+  font-weight: 400;
+  font-style: normal;
+  text-shadow: 0 0 1rem rgb(255, 255, 255);
+}
+
+@media (max-width: 640px) {
+  p.description {
+    overflow: auto;
+  }
 }

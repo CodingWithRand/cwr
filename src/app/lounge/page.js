@@ -5,13 +5,13 @@ import Client from "@/glient/util";
 import { useEffect } from "react";
 import Neutral from "@/geutral/util";
 import {
-  LofiRadios,
+  Radios,
   RadioToast,
   MusicLibrary,
   MusicLibraryDialog,
   MyMusicPlayer
 } from "./components/client/constructor-components/music";
-import { BookShelf } from "./components/client/constructor-components/books";
+import { BookContent, BookShelf } from "./components/client/constructor-components/books";
 import { MusicStateProvider } from "./components/client/utility-components";
 import Script from "next/script";
 import { useGlobal } from "@/glient/global";
@@ -69,7 +69,7 @@ export default function Lounge() {
                 4000,
                 "Also great for studying, focusing, and working.",
                 4000,
-                "Lofi, Medieval, Synthwave, and more.",
+                "Lofi, Jazz, Synthwave, and more.",
                 3000,
                 "I even have a manga collection here lol.",
                 3000,
@@ -80,7 +80,7 @@ export default function Lounge() {
               deletionSpeed={80}
             />
           </div>
-          <iframe className="full-page" src="https://www.youtube.com/embed/Na0w3Mz46GA?si=GRuvjOuzyB_UJo34&amp;autoplay=1&amp;loop=1&amp;mute=1&amp;controls=0&amp;rel=0" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+          <iframe className="full-page" src="https://www.youtube.com/embed/1Tl2FtV06qo?si=bsjj586f15V7Id9b&amp;autoplay=1&amp;loop=1&amp;mute=1&amp;controls=0&amp;rel=0" title="YouTube video player" loading="lazy" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
         </section>
         <section className="break bg-black">
           <div>
@@ -90,17 +90,17 @@ export default function Lounge() {
             </div>
             {
               // Development
-              (authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at) &&
+              // (authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at) &&
               // Production
-              // !(authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at) &&
+              ((process.env.NODE_ENV === "production" && !(authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at)) || (process.env.NODE_ENV !== "production" && (authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at))) &&
               <div className="w-full absolute bottom-0 h-full z-[4]" style={{ backdropFilter: 'blur(1rem)' }}></div>
             }
           </div>
           {   
               // Development
-              (authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at) &&
+              // (authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at) &&
               // Production
-              // !(authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at) &&
+              ((process.env.NODE_ENV === "production" && !(authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at)) || (process.env.NODE_ENV !== "production" && (authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at))) &&
               <div className="z-[5] locked">
                   <h1>Sign up for more access!</h1>
                   <div className="flex flex-row items-center gap-x-8 my-8">
@@ -112,20 +112,125 @@ export default function Lounge() {
         </section>
         {
           // Development
-          !(authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at) && 
+          // !(authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at) && 
           // Production
-          // (authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at) && 
+          ((process.env.NODE_ENV === "production" && (authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at)) || (process.env.NODE_ENV !== "production" && !(authUser.isAuthUser && authUser.isAuthUser.email_confirmed_at))) &&
           <>
             <section id="music">
               <Coroussel
                 totalPages={3}
                 corousselElements={[
-                  <LofiRadios key={1} />,
-                  <MusicLibrary key={2} />,
-                  <MyMusicPlayer key={3} />
+                  <Radios key={1} name="Lofi" data={{
+                    // "f-c": "C4qJeIjNd2U",
+
+                    "hh-rs": "X4VbdwhkE10",
+                    "hh-sc": "JD-kMIpDfnY",
+                    "a-rs": "1Tl2FtV06qo",
+                    "pp-fs": "N0snMcR6aaA",
+                    "j-cs": "E2vONfzoyRI",
+                    "s-rd": "CwPCy1GLS38",
+                    "m-sm": "IxPANmjPaek",
+                    "c-rs": "jXAEIWcGXwE",
+                    "s-cg": "4xDzrJKXOOY",
+                  }} functions={{
+                    getIframeId: (pn, mn) => {
+                      switch (`${pn} - ${mn}`) {
+                        // case "Festival - Christmas": return "f-c";
+
+                        case "Hip Hop - Relax/Study": return "hh-rs";
+                        case "Hip Hop - Sleep/Chill": return "hh-sc";
+                        case "Asian - Relax/Study": return "a-rs";
+                        case "Sad - Rainy Days": return "s-rd";
+                        case "Medieval - Scribing Manuscripts": return "m-sm";
+                        case "Peacful Piano - Focus/Study": return "pp-fs";
+                        case "Classical - Read/Study": return "c-rs";
+                        case "Synthwave - Chill/Gaming": return "s-cg";
+                        case "Jazz - Chill/Study": return "j-cs";
+                      }
+                    },
+                    getIframeDescription: (id) => {
+                      return id === "hh-rs" ? "Hip Hop - Relax/Study" : 
+                        id === "hh-sc" ? "Hip Hop - Sleep/Chill" : 
+                        id === "a-rs" ? "Asian - Relax/Study" : 
+                        id === "s-rd" ? "Sad - Rainy Days" : 
+                        id === "m-sm" ? "Medieval - Scribing Manuscripts" :
+                        id === "pp-fs" ? "Peacful Piano - Focus/Study" : 
+                        id === "c-rs" ? "Classical - Read/Study" : 
+                        id === "s-cg" ? "Synthwave - Chill/Gaming" : 
+                        id === "j-cs" ? "Jazz - Chill/Study" : ""
+                        
+                        // id === "f-c" ? "Festival - Christmas" : ""
+                    },
+                    setToasterIsPlayingState: (iframeId, state, setStateFunction) => {
+                      switch (iframeId) {
+                        // case "f-c":
+                        //     setStateFunction((prev) => ({...prev, playlist: "Festival", music: "Christmas", state, category: "Lofi Radio", subcategory: undefined }));
+                        //     break;
+
+                        case "hh-rs":
+                            setStateFunction((prev) => ({...prev, playlist: "Hip Hop", music: "Relax/Study", state, category: "Lofi Radio", subcategory: undefined }));
+                            break;
+                        case "hh-sc":
+                            setStateFunction((prev) => ({...prev, playlist: "Hip Hop", music: "Sleep/Chill", state, category: "Lofi Radio", subcategory: undefined }));
+                            break;
+                        case "c-rs":
+                            setStateFunction((prev) => ({...prev, playlist: "Classical", music: "Read/Study", state, category: "Lofi Radio", subcategory: undefined }));
+                            break;
+                        case "a-rs":
+                            setStateFunction((prev) => ({...prev, playlist: "Asian", music: "Relax/Study", state, category: "Lofi Radio", subcategory: undefined }));
+                            break;
+                        case "s-rd":
+                            setStateFunction((prev) => ({...prev, playlist: "Sad", music: "Rainy Days", state, category: "Lofi Radio", subcategory: undefined }));
+                            break;
+                        case "m-sm":
+                            setStateFunction((prev) => ({...prev, playlist: "Medieval", music: "Scribing Manuscripts", state, category: "Lofi Radio", subcategory: undefined }));
+                            break;
+                        case "pp-fs":
+                            setStateFunction((prev) => ({...prev, playlist: "Peacful Piano", music: "Focus/Study", state, category: "Lofi Radio", subcategory: undefined }));
+                            break;
+                        case "s-cg":
+                            setStateFunction((prev) => ({...prev, playlist: "Synthwave", music: "Chill/Gaming", state, category: "Lofi Radio", subcategory: undefined }));
+                            break;
+                        case "j-cs":
+                            setStateFunction((prev) => ({...prev, playlist: "Jazz", music: "Chill/Study", state, category: "Lofi Radio", subcategory: undefined }));
+                            break;
+                      }
+                    }
+                  }}/>,
+                  <Radios key={2} name="Jazz" data={{
+                    "j-fj": "LqpBBSdxvDg",
+                    "j-gj": "lq_bftO4_Bs",
+                  }} functions={{
+                    getIframeId: (pn, mn) => {
+                      switch (`${pn} - ${mn}`) {
+                        case "Jazzoppa - Fieren Jazz": return "j-fj";
+                        case "Jazzoppa - Ghibli Jazz": return "j-gj";
+                      }
+                    },
+                    getIframeDescription: (id) => {
+                      return id === "j-fj" ? "Jazzoppa - Fieren Jazz" : 
+                        id === "j-gj" ? "Jazzoppa - Ghibli Jazz" : ""
+                    },
+                    setToasterIsPlayingState: (iframeId, state, setStateFunction) => {
+                      switch (iframeId) {
+                        case "j-fj":
+                            setStateFunction((prev) => ({...prev, playlist: "Jazzoppa", music: "Fieren Jazz", state, category: "Jazz Radio", subcategory: undefined }));
+                            break;
+                        case "j-gj":
+                            setStateFunction((prev) => ({...prev, playlist: "Jazzoppa", music: "Ghibli Jazz", state, category: "Jazz Radio", subcategory: undefined }));
+                            break;
+                      }
+                    }
+                  }}/>,
+                  <MusicLibrary key={3} />,
+                  // <MyMusicPlayer key={4} />
                 ]}
                 corousselWrappersStyle={[
-                  
+                  {},
+                  {},
+                  {
+                    overflow: "hidden"
+                  }
                 ]}
                 backgroundImageDir={false}
               />
@@ -164,7 +269,8 @@ export default function Lounge() {
         `}</style>
       } />
       <MusicLibraryDialog />
-      <RadioToast />
+      <BookContent />
+      <RadioToast radioNameList={["Lofi", "Jazz"]}/>
       <Script src="https://www.youtube.com/iframe_api" />
     </MusicStateProvider>
   );

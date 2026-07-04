@@ -17,22 +17,12 @@ import {
     CategoryTitle
 } from "../utility-components";
 
-function LofiRadio({ id, src, functions }){
+function Radio({ name, id, src, functions }){
     return (
         <div className="item gap-y-2 lrc" popover="auto" onClick={(e) => e.target.togglePopover()}>
-            <iframe id={id} className="relative z-[2] lofi-radio" src={`${src}?controls=0&enablejsapi=1`} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+            <iframe id={id} className={`relative z-[2] ${name.toLowerCase()} radio`} src={`${src}?controls=0&enablejsapi=1`} title="YouTube video player" loading="lazy" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
             <div className="ctrl-btn-sec relative z-[1] flex flex-col items-center gap-y-2">
-                <h3 className="radio-name font-comic-relief text-white text-lg">{
-                    id === "hh-rs" ? "Hip Hop - Relax/Study" : 
-                    id === "hh-sc" ? "Hip Hop - Sleep/Chill" : 
-                    id === "a-rs" ? "Asian - Relax/Study" : 
-                    id === "s-rd" ? "Sad - Rainy Days" : 
-                    id === "pp-fs" ? "Peacful Piano - Focus/Study" : 
-                    id === "medieval" ? "Medieval - Medieval" : 
-                    id === "s-cg" ? "Synthwave - Chill/Gaming" : 
-                    id === "j-cs" ? "Jazz - Chill/Study" : ""
-                    // id === "s-cs" ? "Summer - Chill beats for sunny days" : ""
-                }</h3>
+                <h3 className="radio-name font-comic-relief text-white text-lg">{functions.getIframeDescription(id)}</h3>
                 <button id={id} className="round-btn control-btn" onClick={(e) => functions.play(e, id)} onMouseEnter={functions.selection} onMouseLeave={functions.deselection}>
                     <img id={id} className="control-btn-icon" src="/imgs/backend-images/icon/play-button.png" alt="control button" width={30} height={30} />
                 </button>
@@ -41,174 +31,127 @@ function LofiRadio({ id, src, functions }){
     )
 }
 
-export function LofiRadios(){
+export function Radios({ name, data, functions }){
+    const { getIframeId, getIframeDescription, setToasterIsPlayingState } = functions;
     const { Image } = Client.Components.Dynamic
-    const lofiRadioPlayers = useRef({});
+    const RadioPlayers = useRef({});
     const { player, isPlayingState } = useMusic();
     const { isPlaying, setIsPlaying } = isPlayingState;
     const [ isIframePlaying, setIsIframePlaying ] = useState({});
 
     useEffect(() => {
         let isPlayingDict = {}
-        for (const playerId of document.querySelectorAll(".lofi-radio")) isPlayingDict[playerId.id] = false;
+        for (const playerId of document.querySelectorAll(`.${name.toLowerCase()}.radio`)) isPlayingDict[playerId.id] = false;
         setIsIframePlaying(isPlayingDict);
     }, []);
 
     useEffect(() => {
-        if (isPlaying.category !== "Lofi Radio") return;
+        if (isPlaying.category !== `${name} Radio`) return;
         if (!isPlaying.playlist || !isPlaying.music) return;
-        let iframeId;
-        switch (`${isPlaying.playlist} - ${isPlaying.music}`) {
-            case "Hip Hop - Relax/Study":
-                iframeId = "hh-rs";
-                break;
-            case "Hip Hop - Sleep/Chill":
-                iframeId = "hh-sc";
-                break;
-            case "Asian - Relax/Study":
-                iframeId = "a-rs";
-                break;
-            case "Sad - Rainy Days":
-                iframeId = "s-rd";
-                break;
-            case "Peacful Piano - Focus/Study":
-                iframeId = "pp-fs";
-                break;
-            case "Medieval - Medieval":
-                iframeId = "medieval";
-                break;
-            case "Synthwave - Chill/Gaming":
-                iframeId = "s-cg";
-                break;
-            case "Jazz - Chill/Study":
-                iframeId = "j-cs";
-                break;
-            // case "Summer - Chill beats for sunny days":
-            //     iframeId = "s-cs";
-            //     break;
-        }
+        let iframeId = getIframeId(isPlaying.playlist, isPlaying.music);
+        
         setIsIframePlaying((prev) => ({ ...prev, [iframeId]: isPlaying.state }));
     }, [isPlaying.playlist, isPlaying.music]);
 
     Client.Hooks.useDelayedEffect(() => {
-        if (isPlaying.category !== "Lofi Radio") return;
+        if (isPlaying.category !== `${name} Radio`) return;
         if (Object.values(isIframePlaying).every((value) => value === false)){
-          document.querySelectorAll(`.control-btn`).forEach((e) => e.style.pointerEvents = "initial");
-          return;
+            document.querySelectorAll(`.control-btn`).forEach((e) => e.style.pointerEvents = "initial");
+            return;
         }
         for (const id in isIframePlaying) {
-          if (isIframePlaying[id]) continue;
-          document.querySelector(`#${id}.control-btn`).style.pointerEvents = "none";
+            document.querySelector(`#${id}.control-btn`).style.pointerEvents = "none";
+            if (isIframePlaying[id]){
+                document.querySelector(`#${id}.control-btn`).style.pointerEvents = "initial";
+            }
         }
-      }, [isIframePlaying, isPlaying.category], 100);
+    }, [isIframePlaying, isPlaying.category], 100);
     
-      function selection(e){
+    function selection(e){
         e.target.classList.add("selected");
         e.target.parentElement.querySelector(".radio-name").classList.add("selected");
-        e.target.parentElement.parentElement.querySelector(".lofi-radio").classList.add("selected");
-      }
+        e.target.parentElement.parentElement.querySelector(`.${name.toLowerCase()}.radio`).classList.add("selected");
+    }
     
-      function deselection(e){
+    function deselection(e){
         if (isIframePlaying[e.target.id]) return;
         e.target.classList.remove("selected");
         e.target.parentElement.querySelector(".radio-name").classList.remove("selected");
-        e.target.parentElement.parentElement.querySelector(".lofi-radio").classList.remove("selected");
-      }
-    
-      function setToasterIsPlayingState(iframeId, state){
-        switch (iframeId) {
-            case "hh-rs":
-                setIsPlaying((prev) => ({...prev, playlist: "Hip Hop", music: "Relax/Study", state, category: "Lofi Radio", subcategory: undefined }));
-                break;
-            case "hh-sc":
-                setIsPlaying((prev) => ({...prev, playlist: "Hip Hop", music: "Sleep/Chill", state, category: "Lofi Radio", subcategory: undefined }));
-                break;
-            case "medieval":
-                setIsPlaying((prev) => ({...prev, playlist: "Medieval", music: "Medieval", state, category: "Lofi Radio", subcategory: undefined }));
-                break;
-            case "a-rs":
-                setIsPlaying((prev) => ({...prev, playlist: "Asian", music: "Relax/Study", state, category: "Lofi Radio", subcategory: undefined }));
-                break;
-            case "s-rd":
-                setIsPlaying((prev) => ({...prev, playlist: "Sad", music: "Rainy Days", state, category: "Lofi Radio", subcategory: undefined }));
-                break;
-            case "pp-fs":
-                setIsPlaying((prev) => ({...prev, playlist: "Peacful Piano", music: "Focus/Study", state, category: "Lofi Radio", subcategory: undefined }));
-                break;
-            case "s-cg":
-                setIsPlaying((prev) => ({...prev, playlist: "Synthwave", music: "Chill/Gaming", state, category: "Lofi Radio", subcategory: undefined }));
-                break;
-            case "j-cs":
-                setIsPlaying((prev) => ({...prev, playlist: "Jazz", music: "Chill/Study", state, category: "Lofi Radio", subcategory: undefined }));
-                break;
-            // case "s-cs":
-            //     setIsPlaying((prev) => ({...prev, playlist: "Summer", music: "Chill beats for sunny days", state, category: "Lofi Radio", subcategory: undefined }));
-            //     break;
-        }
-      }
+        e.target.parentElement.parentElement.querySelector(`.${name.toLowerCase()}.radio`).classList.remove("selected");
+    }
 
-      function play(e, id){
+    function play(e, id){
         e.stopPropagation();
         for (let i = 0; i < document.querySelectorAll(".control-btn").length; i++){
-          const btn = document.querySelectorAll(".control-btn")[i];
-          if (btn.id !== id) {
-            btn.classList.remove("selected");
-            btn.parentElement.querySelector(".radio-name").classList.remove("selected");
-            btn.parentElement.parentElement.querySelector(".lofi-radio").classList.remove("selected");
-          }
+            const btn = document.querySelectorAll(".control-btn")[i];
+            if (btn.id !== id) {
+                btn.classList.remove("selected");
+                btn.parentElement.querySelector(".radio-name").classList.remove("selected");
+                btn.parentElement.parentElement.querySelector(`.radio`).classList.remove("selected");
+            }
         }
         const cpi = id;
         if (!isIframePlaying[cpi]) {
-          if (!lofiRadioPlayers.current[cpi]) {
-            lofiRadioPlayers.current[cpi] = new window.YT.Player(cpi, {
-              events: {
+            if (!RadioPlayers.current[cpi]) {
+            RadioPlayers.current[cpi] = new window.YT.Player(cpi, {
+                events: {
                 onReady: (event) => {
-                  event.target.setPlaybackQuality('hd1080'); 
-                  event.target.playVideo();
-                  event.target.setVolume(isPlaying.volume[0]);
+                    event.target.setPlaybackQuality('hd1080'); 
+                    event.target.playVideo();
+                    event.target.setVolume(isPlaying.volume[0]);
                 },
                 onStateChange: (event) => {
-                  if (event.data === window.YT.PlayerState.PAUSED) {
+                    if (event.data === window.YT.PlayerState.PAUSED) {
                     setIsIframePlaying((prev) => ({ ...prev, [cpi]: false }));
-                  }
+                    }
                 },
-              }
+                }
             });
-          } else {
-            lofiRadioPlayers.current[cpi].playVideo();
-          }
-          setToasterIsPlayingState(cpi, true);
-          player.current = lofiRadioPlayers.current[cpi];
-          e.target.classList.add("selected");
-          e.target.parentElement.parentElement.querySelector(".radio-name").classList.add("selected");
-          document.getElementById(cpi).classList.add("selected");
-          document.querySelector(`#${cpi}.control-btn-icon`).src = "/imgs/backend-images/icon/pause.png";
-          document.querySelector(".belt").style.animationPlayState = "paused";
-          setIsIframePlaying((prev) => ({ ...prev, [cpi]: true }));
+            } else {
+                RadioPlayers.current[cpi].playVideo();
+            }
+            setToasterIsPlayingState(cpi, true, setIsPlaying);
+            player.current = RadioPlayers.current[cpi];
+            e.target.classList.add("selected");
+            e.target.parentElement.parentElement.querySelector(".radio-name").classList.add("selected");
+            document.getElementById(cpi).classList.add("selected");
+            document.querySelector(`#${cpi}.control-btn-icon`).src = "/imgs/backend-images/icon/pause.png";
+            document.querySelector(`#${name.toLowerCase()}-radios .belt`).style.animationPlayState = "paused";
+            setIsIframePlaying((prev) => ({ ...prev, [cpi]: true }));
         } else {
-          lofiRadioPlayers.current[cpi].pauseVideo();
-          setToasterIsPlayingState(cpi, false);
-          setIsIframePlaying((prev) => ({ ...prev, [cpi]: false }));
+            RadioPlayers.current[cpi].pauseVideo();
+            setToasterIsPlayingState(cpi, false, setIsPlaying);
+            setIsIframePlaying((prev) => ({ ...prev, [cpi]: false }));
         }
-      }
-
+    }
+    
     return(
-        <div className="h-full">
+        <div className="h-full overflow-hidden">
             <h2 className="flex items-center justify-center gap-x-4 text-[#dc503b] font-comic-relief h-concerned text-center text-5xl nmob:text-6xl sm:text-7xl md:text-8xl lg:text-9xl">
-                <Image id="lofi-girl" alt="lofi-girl" name="lofi-girl.png" dir="icon/" constant />
-                Lofi Radio
+                {
+                    name === "Lofi" ?
+                    <>
+                        <Image id="lofi-girl" alt="lofi-girl" name="lofi-girl.png" dir="icon/" constant />
+                        Lofi Radio
+                    </>
+                    :
+                    name === "Jazz" ?
+                    <>
+                        Jazz Radio
+                    </>
+                    :
+                    <></>
+                }
             </h2>
-            <div className="conveyor h-[60%] w-full" id="lofi-radios">
-                <div className="belt">
-                    <LofiRadio id="hh-rs" src="https://www.youtube.com/embed/jfKfPfyJRdk" functions={{ play, selection, deselection }} />
-                    <LofiRadio id="hh-sc" src="https://www.youtube.com/embed/28KRPhVzCus" functions={{ play, selection, deselection }} />
-                    <LofiRadio id="a-rs" src="https://www.youtube.com/embed/Na0w3Mz46GA" functions={{ play, selection, deselection }} />
-                    <LofiRadio id="pp-fs" src="https://www.youtube.com/embed/TtkFsfOP9QI" functions={{ play, selection, deselection }} />
-                    {/* <LofiRadio id="s-cs" src="https://www.youtube.com/embed/SXySxLgCV-8" functions={{ play, selection, deselection }} /> */}
-                    <LofiRadio id="j-cs" src="https://www.youtube.com/embed/HuFYqnbVbzY" functions={{ play, selection, deselection }} />
-                    <LofiRadio id="s-rd" src="https://www.youtube.com/embed/P6Segk8cr-c" functions={{ play, selection, deselection }} />
-                    <LofiRadio id="medieval" src="https://www.youtube.com/embed/IxPANmjPaek" functions={{ play, selection, deselection }} />
-                    <LofiRadio id="s-cg" src="https://www.youtube.com/embed/4xDzrJKXOOY" functions={{ play, selection, deselection }} />
+            <div className="conveyor h-[60%] w-full radios" id={`${name.toLowerCase()}-radios`}>
+                <div className="belt" style={{
+                    "--radio-count": Object.keys(data).length
+                }}>
+                    {
+                        Object.entries(data).map(([id, src], i) => (
+                            <Radio key={i} name={name} id={id} src={`https://www.youtube.com/embed/${src}`} functions={{ play, selection, deselection, getIframeDescription }} />
+                        ))
+                    }
                 </div>
             </div>
         </div>
@@ -221,8 +164,28 @@ export function MusicLibrary(){
     const { isPlayingState, speakerUID, player } = useMusic();
     const { isPlaying, setIsPlaying } = isPlayingState;
     const { speakerUniqueId, setSpeakerUniqueId } = speakerUID;
+    const conveyorElem = useRef(null);
 
     let constant = { isPlaying, setIsPlaying, player, setSpeakerUniqueId };
+
+    useEffect(() => {
+        const scrollHorizontally = (e) => {
+            e.preventDefault();
+            if (device.device !== "xs") {
+                e.currentTarget.scrollBy({
+                    left: e.deltaY * 2, // scroll horizontally by the amount of vertical scroll
+                    top: 0, // don't scroll vertically
+                    behavior: 'smooth' // smooth scrolling
+                });
+            }
+        }
+        conveyorElem.current.addEventListener('wheel', scrollHorizontally, { passive: false });
+        return () => {
+            if (conveyorElem.current) {
+                conveyorElem.current.removeEventListener('wheel', scrollHorizontally);
+            }
+        }
+    }, [conveyorElem])
 
     function playRandomly(e){ 
         setIsPlaying((prev) => ({...prev, state: false}));
@@ -239,16 +202,19 @@ export function MusicLibrary(){
     }
 
     return(
-        <div className="flex flex-col items-center h-[90%] relative">
+        <div className="flex flex-col items-center h-[95%] relative">
             <h2 className="text-[#9b3331] font-comic-relief py-16 text-center text-5xl nmob:text-6xl sm:text-7xl md:text-8xl lg:text-9xl">
                 Music Library
             </h2>
-            <div className="conveyor overflow-auto" id="playlists" style={{
+            <div ref={conveyorElem} className="conveyor" id="playlists" style={{
+                overflowY: device.device === "xs" ? "auto" : "hidden",
+                overflowX: device.device === "xs" ? "hidden" : "auto",
                 justifyContent: (winSize.windowSize[1] >= 1000 && winSize.windowSize[0] >= 2500) || device.device === "xs" ? "center" : undefined, //Still have to manually adjust the condition.
                 gridTemplateColumns: device.device === "xs" ? "200px" : `repeat(${
                     Math.ceil((Object.keys(musicId).length +
                     Object.keys(musicId.BGM).length +
                     Object.keys(musicId["Game OST"]).length +
+                    Object.keys(musicId["EToH OST"]).length +
                     Object.keys(musicId["Other OST"]).length)
                     /
                     (winSize.windowSize[1] >= 1000 ? Math.floor((winSize.windowSize[1] - 750) / 300) + 1 : 1))
@@ -258,7 +224,8 @@ export function MusicLibrary(){
                         Object.keys(musicId).length +
                         Object.keys(musicId.BGM).length +
                         Object.keys(musicId["Game OST"]).length +
-                        Object.keys(musicId["Other OST"]).length
+                        Object.keys(musicId["EToH OST"]).length +
+                        Object.keys(musicId["Other OST"]).length 
                     }` : `repeat(${winSize.windowSize[1] >= 1000 ? Math.floor((winSize.windowSize[1] - 750) / 300) + 1 : 1}, 1fr)`
             }}>
                 <CategoryTitle text="Background Music" />
@@ -276,6 +243,9 @@ export function MusicLibrary(){
                 <PlaylistLibCard cate="Game OST" name="The Binding of Isaac (Lullabies)" backdropColor="#31372A" />
                 <PlaylistLibCard cate="Game OST" name="The Binding of Isaac (Mutations)" backdropColor="#00355D" />
                 <PlaylistLibCard cate="Game OST" name="Library of Ruina" backdropColor="#311f0bff" />
+                <CategoryTitle text="EToH OST" />
+                <PlaylistLibCard cate="EToH OST" name="ToTUTU" backdropColor="#f15555" />
+                <PlaylistLibCard cate="EToH OST" name="ToLR" backdropColor="#5d4b02" /> 
                 <CategoryTitle text="Other OST" />
                 <PlaylistLibCard cate="Other OST" name="Fieren Beyond Journey's End" backdropColor="#99cba6" />
             </div>
@@ -300,7 +270,7 @@ export function MusicLibrary(){
     )
 }
 
-export function RadioToast(){
+export function RadioToast({ radioNameList }){
     const { isPlayingState, player, speakerUID, cs } = useMusic();
     const { device, authUser } = useGlobal();
     const { isPlaying, setIsPlaying } = isPlayingState;
@@ -312,18 +282,23 @@ export function RadioToast(){
 
     Client.Hooks.useDelayedEffect(() => {
         if(!player.current) return;
+        console.log(player.current)
         if(isPlaying.state){ 
-            player.current.playVideo();
+            player.current?.playVideo();
         } else {
-            player.current.pauseVideo();
+            player.current?.pauseVideo();
         }
     }, [isPlaying.state], 100)
 
     useEffect(() => {
         // Comment below if in development
-        // if(!authUser.isAuthUser && !authUser.isAuthUser?.email_confirmed_at) return;
+        if(process.env.NODE_ENV === "production" && !authUser.isAuthUser && !authUser.isAuthUser?.email_confirmed_at) return;
         if (!isPlaying.state){
-            document.querySelector(".belt").style.animationPlayState = "running";
+            document.querySelectorAll('.belt').forEach((b) => b.style.animationPlayState = "running");
+            // document.querySelector(`${
+            //     isPlaying.category === "Lofi Radio" ? "#lofi-radios" :
+            //     isPlaying.category === "Jazz Radio" ? "#jazz-radios" : ""
+            // } .belt`).style.animationPlayState = "running";
             document.querySelectorAll(".control-btn-icon").forEach((cbi) => {
                 cbi.src = "/imgs/backend-images/icon/play-button.png"
             });
@@ -331,24 +306,26 @@ export function RadioToast(){
                 cb.src = "/imgs/backend-images/icon/play-button.png"
                 cb.classList.remove("selected")
             });
-            document.querySelectorAll(".lofi-radio").forEach((lr) => {
-                lr.classList.remove("selected")
-            });
+
+            radioNameList.forEach((rn) => {
+                document.querySelectorAll(`.${rn.toLowerCase()}.radio`).forEach((lr) => lr.classList.remove("selected"));
+            })
+
             document.querySelectorAll(".radio-name").forEach((rn) => {
                 rn.classList.remove("selected")
             });
         }
 
-        if (isPlaying.state && isPlaying.category !== "Lofi Radio"){
+        if (isPlaying.state && !radioNameList.includes(isPlaying.category)){
             document.querySelectorAll(".control-btn").forEach((e) => e.style.pointerEvents = "none");
-        } else if (!isPlaying.state && isPlaying.category !== "Lofi Radio") {
+        } else if (!isPlaying.state && !radioNameList.includes(isPlaying.category)) {
             document.querySelectorAll(".control-btn").forEach((e) => e.style.pointerEvents = "initial");
         }
     }, [isPlaying.state, isPlaying.category])
 
     useEffect(() => {
         // Comment below if in development
-        // if(!authUser.isAuthUser && !authUser.isAuthUser?.email_confirmed_at) return;
+        if(process.env.NODE_ENV === "production" && !authUser.isAuthUser?.email_confirmed_at) return;
         let showNameTimeout;
         let hideNameTimeout;
         if(device.device !== "lg" && device.device !== "xl" && device.device !== "2xl"){
@@ -364,37 +341,22 @@ export function RadioToast(){
         }
     }, [isPlaying.playlist, isPlaying.music, device.device]);
 
-
-    function isLofiRadio(){
+    function isRadio(){
         let iframeId;
         switch (`${isPlaying.playlist} - ${isPlaying.music}`) {
-            case "Hip Hop - Relax/Study":
-                iframeId = "hh-rs";
-                break;
-            case "Hip Hop - Sleep/Chill":
-                iframeId = "hh-sc";
-                break;
-            case "Asian - Relax/Study":
-                iframeId = "a-rs";
-                break;
-            case "Sad - Rainy Days":
-                iframeId = "s-rd";
-                break;
-            case "Peacful Piano - Focus/Study":
-                iframeId = "pp-fs";
-                break;
-            case "Medieval - Medieval":
-                iframeId = "medieval";
-                break;
-            case "Synthwave - Chill/Gaming":
-                iframeId = "s-cg";
-                break;
-            case "Jazz - Chill/Study":
-                iframeId = "j-cs";
-                break;
-            // case "Summer - Chill beats for sunny days":
-            //     iframeId = "s-cs";
-            //     break;
+            case "Hip Hop - Relax/Study": iframeId = "hh-rs"; break;
+            case "Hip Hop - Sleep/Chill": iframeId = "hh-sc"; break;
+            case "Asian - Relax/Study": iframeId = "a-rs"; break;
+            case "Sad - Rainy Days": iframeId = "s-rd"; break;
+            case "Peacful Piano - Focus/Study": iframeId = "pp-fs"; break;
+            case "Classical - Read/Study": iframeId = "c-rs"; break;
+            case "Medieval - Scribing Manuscripts": iframeId = "m-sm"; break;
+            case "Synthwave - Chill/Gaming": iframeId = "s-cg"; break;
+            case "Jazz - Chill/Study": iframeId = "j-cs"; break;
+            
+            case "Jazzoppa - Fieren Jazz": iframeId = "j-fj"; break;
+            case "Jazzoppa - Ghibli Jazz": iframeId = "j-gj"; break;
+
             default:
                 iframeId = "speaker";
         }
@@ -402,21 +364,27 @@ export function RadioToast(){
     }
 
     function playOnToast(e){
-        let iframeId = isLofiRadio()[0];
+        let iframeId = isRadio()[0];
         setIsPlaying((prevState) => ({ ...prevState, state: !prevState.state }))
-        if(isLofiRadio()[1]){
+        if(isRadio()[1]){
             if(isPlaying.state){
                 document.querySelector(`#${iframeId}.control-btn-icon`).src = "/imgs/backend-images/icon/play-button.png";
-                document.querySelector(".belt").style.animationPlayState = "running";
+                document.querySelector(`${
+                    isPlaying.category === "Lofi Radio" ? "#lofi-radios" :
+                    isPlaying.category === "Jazz Radio" ? "#jazz-radios" : ""
+                } .belt`).style.animationPlayState = "running";
             } else {   
                 document.querySelector(`#${iframeId}.control-btn-icon`).src = "/imgs/backend-images/icon/pause.png";
-                document.querySelector(".belt").style.animationPlayState = "paused";
+                document.querySelector(`#${
+                    isPlaying.category === "Lofi Radio" ? "#lofi-radios" :
+                    isPlaying.category === "Jazz Radio" ? "#jazz-radios" : ""
+                } .belt`).style.animationPlayState = "paused";
             }
         }
     }
 
     function skipOnToast(e){
-        if(isPlaying.category === "Lofi Radio") return;
+        if(radioNameList.includes(isPlaying.category)) return;
         else if(isPlaying.category === "Random") {
             if(!isPlaying.globallyRandom){
                 if(currentSearching.cate) document.getElementById(isPlaying.playlist).querySelector(".random-play").click();
@@ -440,7 +408,7 @@ export function RadioToast(){
             <button onClick={playOnToast} className="toast-btn">
                 <img src={`/imgs/backend-images/icon/${isPlaying.state ? "pause" : "play-button"}.png`} alt="control-btn" width={25} height={25} />
             </button>
-            <button id="skip-play-btn" disabled={isPlaying.category === "Lofi Radio" ? true : false} onClick={skipOnToast}>
+            <button id="skip-play-btn" disabled={radioNameList.includes(`${isPlaying.category} Radio`)} onClick={skipOnToast}>
                 <Image name="next-button.png" alt="next-play-btn" dir="icon/" width={25} height={25} constant />
             </button>
             <button id="show-mn-btn" onClick={() => {
@@ -593,14 +561,44 @@ export function MyMusicPlayer() {
     return <>
         <div className="flex flex-col items-center h-full relative">
             <h2 className="text-[#e96d6b] font-comic-relief py-16 text-center text-3xl nmob:text-4xl sm:text-5xl md:text-6xl lg:text-8xl">
-                Play your own <span id="rainbow-text">music</span>
+                Play your own <span id="rainbow-text">playlist</span>
             </h2>
-            <div>
-                <div className="w-[400px] h-[400px] bg-white/50 flex items-center justify-center">
-                    <div className="w-[90%] h-[90%] flex items-center justify-center" style={{
-                        border: "5px dashed white"
-                    }}>
-                        <span className="text-white font-comic-relief text-8xl">+</span>
+            <div className="w-[75%] h-[400px] grid grid-cols-[25%_calc(75%_-_1rem)] gap-4 justify-items-center">
+                <div className="w-full h-full flex flex-col gap-y-4">
+                    <div className="h-1/2 bg-white/50 flex items-center justify-center">
+                        <button className="w-[90%] h-[90%] flex flex-col items-center justify-center" style={{
+                            border: "5px dashed white"
+                        }}>
+                            <span className="text-white font-comic-relief text-8xl" style={{ lineHeight: 0.75 }}>+</span>
+                            <span className="text-white font-comic-relief text-xl">Add a music</span>
+                        </button>
+                    </div>
+                    <div className="h-1/2 bg-white/50 flex items-center justify-center">
+                        <button className="w-[90%] h-[90%] flex flex-col items-center justify-center" style={{
+                            border: "5px dashed white"
+                        }}>
+                            <span className="text-white font-comic-relief text-8xl" style={{ lineHeight: 0.75 }}>+</span>
+                            <span className="text-white font-comic-relief text-xl">Import from a playlist</span>
+                        </button>
+                    </div>
+                </div>
+                <div className="relative w-full h-full flex items-center justify-center">
+                    <h3 className="absolute top-[-3rem] right-[-1.5rem] rotate-4 lg:rotate-2 text-white font-comic-relief text-center text-sm sm:text-lg md:text-xl lg:text-3xl">Your created playlist will show here!</h3>
+                    <div className="overflow-scroll h-full w-full grid grid-cols-2 md:grid-cols-3 auto-rows-[calc(50%_-_0.5rem)] gap-4">
+                        <div className="bg-white/50 w-full h-full"></div>
+                        <div className="bg-white/50 w-full h-full"></div>
+                        <div className="bg-white/50 w-full h-full"></div>
+                        <div className="bg-white/50 w-full h-full"></div>
+                        <div className="bg-white/50 w-full h-full"></div>
+                        <div className="bg-white/50 w-full h-full"></div>
+                        <div className="bg-white/50 w-full h-full"></div>
+                        <div className="bg-white/50 w-full h-full"></div>
+                        <div className="bg-white/50 w-full h-full"></div>
+                        <div className="bg-white/50 w-full h-full"></div>
+                        <div className="bg-white/50 w-full h-full"></div>
+                        <div className="bg-white/50 w-full h-full"></div>
+                        <div className="bg-white/50 w-full h-full"></div>
+                        <div className="bg-white/50 w-full h-full"></div>
                     </div>
                 </div>
             </div>

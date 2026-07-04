@@ -1,62 +1,61 @@
 @config "../../../tailwind.config.js";
 @reference "tailwindcss";
 
-@layer components{
-    #registration-mode {
-        @apply bottom-[-1em] left-[1em] text-[0.55em] sm:text-base;
-        color: darkgray;
-        text-decoration: underline;
-        cursor: pointer;
-        position: relative;
-    }
-    .login-pallete{
-      @apply relative z-2 p-8 rounded-[2em] bg-white w-[70vw] h-auto sm:w-[65vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw];
-      overflow-x: hidden;
-      box-shadow: 0 0 5px gray;
-      transition:
-        transform 2s ease-out,
-        opacity 2s ease-out;
-      min-width: 245px;
-    }
-    .h-reg {
-      @apply text-2xl mt-[2em] sm:text-[2em] sm:mt-[1em] lg:text-[3em];
-    }
-    
-    .reg-t {
-      @apply sm:text-xl lg:text-[1.5em];
-    }
-    
-    .reg-f {
-      @apply py-[1em] sm:py-[2em];
-    }
-    
-    .input-field input {
-      @apply text-xs sm:text-base;
-    }
-    
-    .field-label {
-      @apply text-xs sm:text-base;
-    }
-    
-    .submit-btn {
-      @apply text-xs sm:text-base;
-    }
-    
-    .forget-password {
-      @apply text-[0.55em] sm:text-base;
-      color: darkgray;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-    
-    .email-icon {
-      @apply w-[150px] h-[150px] sm:w-[200px] sm:h-[200px];
-    }
-    
-    .notf-box {
-      @apply p-[3vh] text-sm sm:p-[5vh] sm:text-base;
-    }
-    
+@layer components {
+  #registration-mode {
+    @apply bottom-[-1em] left-[1em] text-[0.55em] sm:text-base;
+    color: darkgray;
+    text-decoration: underline;
+    cursor: pointer;
+    position: relative;
+  }
+  .login-pallete {
+    @apply relative z-2 p-8 rounded-[2em] bg-white w-[70vw] h-auto sm:w-[65vw] md:w-[60vw] lg:w-[50vw] xl:w-[40vw];
+    overflow-x: hidden;
+    box-shadow: 0 0 5px gray;
+    transition:
+      transform 2s ease-out,
+      opacity 2s ease-out;
+    min-width: 245px;
+  }
+  .h-reg {
+    @apply text-2xl mt-[2em] sm:text-[2em] sm:mt-[1em] lg:text-[3em];
+  }
+
+  .reg-t {
+    @apply sm:text-xl lg:text-[1.5em];
+  }
+
+  .reg-f {
+    @apply py-[1em] sm:py-[2em];
+  }
+
+  .input-field input {
+    @apply text-xs sm:text-base;
+  }
+
+  .field-label {
+    @apply text-xs sm:text-base;
+  }
+
+  .submit-btn {
+    @apply text-xs sm:text-base;
+  }
+
+  .forget-password {
+    @apply text-[0.55em] sm:text-base;
+    color: darkgray;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .email-icon {
+    @apply w-[150px] h-[150px] sm:w-[200px] sm:h-[200px];
+  }
+
+  .notf-box {
+    @apply p-[3vh] text-sm sm:p-[5vh] sm:text-base;
+  }
 }
 
 @layer components {

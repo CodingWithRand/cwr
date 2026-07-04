@@ -1,4 +1,4 @@
-@import 'tailwindcss/utilities' layer(utilities);
+@import "tailwindcss/utilities" layer(utilities);
 @reference "tailwindcss";
 
 @config "../../../../tailwind.config.js";
@@ -116,67 +116,68 @@
 }
 
 @layer components {
+  /* NavBar Component */
 
-    /* NavBar Component */
+  #navbar #menu {
+    transition: opacity 0.5s ease-in-out;
+  }
 
-    #navbar #menu {
-        transition: opacity 0.5s ease-in-out;
-    }
+  #navbar {
+    @apply text-black bg-[#DDDDDD] dark:text-white dark:bg-black;
+    position: absolute;
+    top: 0;
+    margin: 0;
+    height: 3.5em;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    width: 100%;
+    z-index: 1;
+    align-items: center;
+  }
 
-    #navbar {
-        @apply text-black bg-[#DDDDDD] dark:text-white dark:bg-black;
-        position: absolute;
-        top: 0;
-        margin: 0;
-        height: 3.5em;
-        font-family: sans-serif;
-        display: flex;
-        justify-content: space-between;
-        flex-direction: row;
-        width: 100%;
-        z-index: 1;
-        align-items: center;
-    }
+  #navbar ul {
+    @apply bg-[#DDDDDD] dark:bg-black flex mx-4 p-0 top-0 flex-row h-full items-center;
+  }
 
-    #navbar ul {
-        @apply bg-[#DDDDDD] dark:bg-black flex mx-4 p-0 top-0 flex-row h-full items-center;
-    }
+  #navbar #menu li {
+    @apply w-full sm:w-auto;
+  }
 
-    #navbar #menu li {
-        @apply w-full sm:w-auto;
-    }
+  #navbar ul li a {
+    @apply block w-full px-2 py-4 sm:w-auto;
+    transition:
+      background-color 0.2s ease-in-out,
+      color 0.2s ease-in-out;
+  }
 
-    #navbar ul li a {
-        @apply block w-full px-2 py-4 sm:w-auto;
-        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-    }
+  #navbar ul li a:hover {
+    @apply bg-black text-white dark:bg-[#DDDDDD] dark:text-black;
+  }
 
-    #navbar ul li a:hover {
-        @apply bg-black text-white dark:bg-[#DDDDDD] dark:text-black
-    }
+  #navbar #menu {
+    @apply hidden absolute m-0 top-full flex-col h-max opacity-0 text-center sm:flex sm:relative opacity-100 sm:mx-4 sm:top-0 sm:flex-row sm:h-full;
+    list-style: none;
+    align-items: center;
+  }
 
-    #navbar #menu {
-        @apply hidden absolute m-0 top-full flex-col h-max opacity-0 text-center sm:flex sm:relative opacity-100 sm:mx-4 sm:top-0 sm:flex-row sm:h-full;
-        list-style: none;
-        align-items: center;
-    }
+  #menu-btn img {
+    cursor: pointer;
+    transition: rotate 0.5s ease-in-out;
+  }
 
-    #menu-btn img {
-        cursor: pointer;
-        transition: rotate 0.5s ease-in-out;
-    }
+  #menu-btn img:hover {
+    opacity: 0.8;
+  }
 
-    #menu-btn img:hover {
-        opacity: 0.8;
-    }
-
-    #menu-btn{
-        @apply flex sm:hidden;
-        column-gap: 0.5em;
-        margin-left: 1em;
-        align-items: center;
-        flex-direction: row;
-    }
+  #menu-btn {
+    @apply flex sm:hidden;
+    column-gap: 0.5em;
+    margin-left: 1em;
+    align-items: center;
+    flex-direction: row;
+  }
 }
 
 /* AlertBox Component */
@@ -184,190 +185,189 @@
 img,
 div,
 button {
-    user-select: none;
+  user-select: none;
 }
 
 .dialog-btn,
 .dialog-subtitle,
 .dialog-title {
-    text-align: center;
+  text-align: center;
 }
 
 :root {
-    --switch-bg: gray
+  --switch-bg: gray;
 }
 
 .alert-box {
-    margin: auto;
-    height: max-content;
-    border-radius: 10px;
-    border-style: solid;
-    border-width: 3px;
+  margin: auto;
+  height: max-content;
+  border-radius: 10px;
+  border-style: solid;
+  border-width: 3px;
 }
 
 .dialog-nester {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    overflow: auto;
-    row-gap: 1.5vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: auto;
+  row-gap: 1.5vh;
 }
 
 .dialog-btn {
-    width: 40%;
-    border-radius: 5px;
-    padding: 1vh;
-    font-size: 1em;
-    background-color: lightgray;
+  width: 40%;
+  border-radius: 5px;
+  padding: 1vh;
+  font-size: 1em;
+  background-color: lightgray;
 }
 
 .switch-area {
-    display: flex;
-    align-items: center;
-    background-color: var(--switch-bg);
-    border-radius: 20px;
-    cursor: pointer;
-    border: 3px gray solid;
+  display: flex;
+  align-items: center;
+  background-color: var(--switch-bg);
+  border-radius: 20px;
+  cursor: pointer;
+  border: 3px gray solid;
 }
 
 .button {
-    border-radius: 9999px;
-    background-color: darkgray;
-    height: 100%;
-    position: relative;
-    transition: left ease-in-out 0.2s;
+  border-radius: 9999px;
+  background-color: darkgray;
+  height: 100%;
+  position: relative;
+  transition: left ease-in-out 0.2s;
 }
 
 .button.is-off {
-    left: 0;
+  left: 0;
 }
 
 .switch-area.is-off {
-    --switch-bg: gray;
+  --switch-bg: gray;
 }
 
 .button.is-on {
-    left: 15px;
+  left: 15px;
 }
 
 .switch-area.is-on {
-    --switch-bg: lightgray;
+  --switch-bg: lightgray;
 }
 
 .pallete {
-    width: 90%;
-    height: auto;
-    padding: 5%;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    row-gap: 10px;
-    margin: 10px 0;
+  width: 90%;
+  height: auto;
+  padding: 5%;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  margin: 10px 0;
 }
 
 .setting-section-title {
-    font-size: 40px;
+  font-size: 40px;
 }
 
 /* InputField & InputGroupField Component */
 
-
 .field-label {
-    color: rgb(150, 150, 150);
+  color: rgb(150, 150, 150);
 }
 
 .field-warning {
-    color: rgb(248 113 113);
+  color: rgb(248 113 113);
 }
 
 .input-field {
-    display: flex;
-    flex-direction: column;
-    margin: 1vh 0;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 1vh 0;
+  width: 100%;
 }
 
 .input-fields {
-    display: flex;
-    flex-direction: column;
-    margin: 1vh 0;
-    width: 100%;
-    row-gap: 0.5vh;
+  display: flex;
+  flex-direction: column;
+  margin: 1vh 0;
+  width: 100%;
+  row-gap: 0.5vh;
 }
 
 .input-field input {
-    border: solid 2px;
-    border-radius: 5px;
-    padding: 5px;
-    border-color: lightgray;
+  border: solid 2px;
+  border-radius: 5px;
+  padding: 5px;
+  border-color: lightgray;
 }
 
 .input-field input.err-warn {
-    border-color: rgb(248 113 113);
+  border-color: rgb(248 113 113);
 }
 
 .input-field.sub {
-    margin: 0;
+  margin: 0;
 }
 
 .input-field input::placeholder {
-    color: darkgray;
+  color: darkgray;
 }
 
 /* LoadingPage Component */
 
 .loading-bar {
-    display: flex;
-    width: 100vw;
-    height: 100vh;
-    flex-direction: row;
-    column-gap: 1vw;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 9999;
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  flex-direction: row;
+  column-gap: 1vw;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
 }
 
 .loading-dot {
-    width: 2vw;
-    height: 2vw;
-    border-radius: 9999px;
-    position: relative;
+  width: 2vw;
+  height: 2vw;
+  border-radius: 9999px;
+  position: relative;
 }
 
 .loading-dot#d1 {
-    animation: bouncing ease-in-out infinite alternate 0.5s 0s;
+  animation: bouncing ease-in-out infinite alternate 0.5s 0s;
 }
 
 .loading-dot#d2 {
-    animation: bouncing ease-in-out infinite alternate 0.5s 0.8s;
+  animation: bouncing ease-in-out infinite alternate 0.5s 0.8s;
 }
 
 .loading-dot#d3 {
-    animation: bouncing ease-in-out infinite alternate 0.5s 1.6s;
+  animation: bouncing ease-in-out infinite alternate 0.5s 1.6s;
 }
 
 @keyframes bouncing {
-    from {
-        bottom: 0;
-    }
+  from {
+    bottom: 0;
+  }
 
-    to {
-        bottom: 1%;
-    }
+  to {
+    bottom: 1%;
+  }
 }
 
 /* ThemeChanger Component */
 
 .setup-btn {
-    width: 35px;
-    height: 35px;
+  width: 35px;
+  height: 35px;
 }
 
 .setup-btn img {
-    height: 100% !important;
-    object-fit: cover;
+  height: 100% !important;
+  object-fit: cover;
 }

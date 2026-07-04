@@ -1,2 +1,2 @@
 # Pre-release Log
-*Latest Change* - My Projects page replacement coroussel is finished.
+*Latest Change* - Modularized radio music player (YT lives)

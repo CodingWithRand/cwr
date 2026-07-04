@@ -1,22 +1,22 @@
-.authentication-action{
-    position: absolute;
-    bottom: 40%;
-    width: 100%;
-    text-align: center;
-    z-index: 10000;
+.authentication-action {
+  position: absolute;
+  bottom: 40%;
+  width: 100%;
+  text-align: center;
+  z-index: 10000;
 }
 
 /* Client Component */
 
-.setting-submitting-form .submit-btn{
-    background-color: lightgray;
-    border-radius: 5px;
-    width: 150px;
-    padding: 1vh 0;
+.setting-submitting-form .submit-btn {
+  background-color: lightgray;
+  border-radius: 5px;
+  width: 150px;
+  padding: 1vh 0;
 }
 
-.setting-submitting-form{
-    display: flex;
-    flex-direction: column;
-    row-gap: 10px;
+.setting-submitting-form {
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
 }

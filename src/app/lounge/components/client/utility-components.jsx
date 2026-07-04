@@ -2,6 +2,7 @@ import Client from "@/glient/util";
 import { flushSync } from "react-dom";
 import { useContext, useState, useRef, createContext, useEffect } from "react";
 import musicId from "../musicId.json";
+import { useGlobal } from "@/glient/global";
 import Cookies from "universal-cookie";
 
 import { extend } from "@pixi/react";
@@ -350,42 +351,64 @@ export function Book({
     thickness,
     height,
     color,
-    event
+    event,
+    zIndex
 }){
+    const book = useRef(null);
+    const { device } = useGlobal();
+    const [ sizeOffsetter, setSizeOffsetter ] = useState(1);
+
+    useEffect(() => {
+        if (device.device === "sm"){
+            setSizeOffsetter(0.8);
+        } else if (device.device === "xs"){
+            setSizeOffsetter(0.6);
+        } else {
+            setSizeOffsetter(1);
+        }
+
+        // return () => {
+        //     if(book.current) book.current.destroy();
+        // }
+    }, [device.device])
+
     return(
         <pixiGraphics
+            ref={book}
             interactive={true}
-            hitArea={new Rectangle(0, 0, thickness, height)}
+            hitArea={new Rectangle(0, 0, thickness * sizeOffsetter, height * sizeOffsetter)}
             onClick={event.onClick}
             onTap={event.onTap}
             cursor="pointer"
-            x={position.x}
-            y={position.y}
+            x={position.x * sizeOffsetter}
+            y={position.y * sizeOffsetter}
+            zIndex={zIndex || 1}
             draw={g => {
+                g.clear();
                 // Book cover
                 g.setFillStyle({ color: color.cover });
-                g.rect(0, 0, thickness, height);
+                g.rect(0, 0, thickness * sizeOffsetter, height * sizeOffsetter);
                 g.fill();
                 // Book spine (darker)
                 g.setFillStyle({ color: color.spine });
-                g.rect(0, 0, 6, height);
+                g.rect(0, 0, 6, height * sizeOffsetter);
                 g.fill();
 
                 if(side === "left"){
                     // Book top (simulate 3D)
                     g.setFillStyle({ color: 0xffeedd });
                     g.moveTo(0, 0);
-                    g.lineTo(thickness, 0);
-                    g.lineTo(thickness + 12, -20);
+                    g.lineTo(thickness * sizeOffsetter, 0);
+                    g.lineTo((thickness * sizeOffsetter) + 12, -20);
                     g.lineTo(12, -20);
                     g.closePath();
                     g.fill();
                     // Book front
                     g.setFillStyle({ color: color.front });
-                    g.moveTo(thickness, 0);
-                    g.lineTo(thickness, height);
-                    g.lineTo(thickness + 12, height - 20);
-                    g.lineTo(thickness + 12, -20);
+                    g.moveTo(thickness * sizeOffsetter, 0);
+                    g.lineTo(thickness * sizeOffsetter, height * sizeOffsetter);
+                    g.lineTo((thickness * sizeOffsetter) + 12, (height * sizeOffsetter) - 20);
+                    g.lineTo((thickness * sizeOffsetter) + 12, -20);
                     g.closePath();
                     g.fill();
                 }
@@ -393,16 +416,16 @@ export function Book({
                     // Book top (simulate 3D)
                     g.setFillStyle({ color: 0xffeedd });
                     g.moveTo(0, 0);
-                    g.lineTo(thickness, 0);
-                    g.lineTo(thickness - 12, -20);
+                    g.lineTo(thickness * sizeOffsetter, 0);
+                    g.lineTo((thickness * sizeOffsetter) - 12, -20);
                     g.lineTo(-12, -20);
                     g.closePath();
                     g.fill();
                     // Book back
                     g.setFillStyle({ color: color.spine });
                     g.moveTo(0, 0);
-                    g.lineTo(0, height);
-                    g.lineTo(-12, height - 20);
+                    g.lineTo(0, height * sizeOffsetter);
+                    g.lineTo(-12, (height * sizeOffsetter) - 20);
                     g.lineTo(-12, -20);
                     g.closePath();
                     g.fill();

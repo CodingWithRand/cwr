@@ -4,12 +4,28 @@ import { Container, Graphics, Sprite, Texture, Assets, Rectangle } from "pixi.js
 import { useRef, useState, useEffect } from "react";
 import { useGlobal } from "@/glient/global";
 import { Book } from "../utility-components";
+import bookMetadataList from "../../bookmetadata.json";
 
 extend({
     Container,
     Graphics,
     Sprite,
 })
+
+export function BookContent() {
+    return(
+        <div id="book-content" style={{ display: "none" }}>
+            <div className="inner-cover">
+                <div className="pages">
+                    <iframe id="book-website-embed" loading="lazy"></iframe> 
+                    <div className="book-nav-ctrl-btns">
+                        <button className="close" onClick={() => document.getElementById("book-content").style.display = "none"}>✕</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
 
 export function BookShelf(){
     const defaultSpriteSizes = {
@@ -26,21 +42,49 @@ export function BookShelf(){
         bookshelf: 0.125
     }
     const parent = useRef(null);
+    const bookshelf = useRef(null);
     const { device } = useGlobal();
     const [ textures, setTextures ] = useState(Texture.EMPTY);
     const [ spriteSizes, setSpriteSizes ] = useState(defaultSpriteSizes);
     const [ dialogPos, setDialogPos ] = useState({ x: 0, y: 0 });
     const [ bookMetadata, setBookMetadata ] = useState({
         title: "",
-        link: ""
+        link: "",
+        allowEmbed: false,
+        coverColor: "#ffffff"
     });
 
-    function showBookCover(e, title, link){
+    function showBookCover(e, bmd){
         e.stopPropagation();
         const { x, y } = e.data.global;
         setDialogPos({ x: x, y: y - 50 });
-        setBookMetadata({ title, link });
+        setBookMetadata({ 
+            title: bmd.title,
+            link: bmd.link, 
+            allowEmbed: bmd.embed, 
+            coverColor: bmd.coverColor
+        });
         document.getElementById("link-dialog").show();
+    }
+
+    function openBookOnline(e) {
+        document.getElementById("link-dialog").close();
+        if(bookMetadata.allowEmbed){
+            e.preventDefault();
+            document.getElementById("book-website-embed").src = bookMetadata.link;
+            document.querySelector("#book-content .inner-cover").style.backgroundColor = bookMetadata.coverColor;
+            document.getElementById("book-content").style.display = "block";
+        }
+    }
+
+    function openBook(e) {
+        document.getElementById("link-dialog").close();
+        if(bookMetadata.allowEmbed){
+            e.preventDefault();
+            document.getElementById("book-website-embed").src = bookMetadata.link;
+            document.querySelector("#book-content .inner-cover").style.backgroundColor = bookMetadata.coverColor;
+            document.getElementById("book-content").style.display = "block";
+        }
     }
 
     useEffect(() => {
@@ -78,8 +122,13 @@ export function BookShelf(){
         } else {
             setSpriteSizes(defaultSpriteSizes)
         }
-    }, [device.device])
 
+        // return () => {
+        //     if(bookshelf.current) {
+        //         bookshelf.current.destroy({ children: true, texture: true, baseTexture: true });
+        //     }
+        // }
+    }, [device.device])
 
     return (
         <>
@@ -96,6 +145,7 @@ export function BookShelf(){
                                 texture={textures.bookshelf}
                                 x={0} y={0}
                                 scale={spriteSizes.bookshelf}
+                                ref={bookshelf}
                             />
                             <pixiContainer 
                                 x={10} y={10} 
@@ -115,19 +165,12 @@ export function BookShelf(){
                                         front: 0x99bbff
                                     }}
                                     event={{
-                                        onClick: (e) => showBookCover(
-                                            e, 
-                                            "My Gift LVL 9999 Unlimited Gacha Manga", 
-                                            "https://mygiftlvl9999unlimitedgacha.com/"
-                                        ),
-                                        onTap: () => showBookCover(
-                                            e, 
-                                            "My Gift LVL 9999 Unlimited Gacha Manga", 
-                                            "https://mygiftlvl9999unlimitedgacha.com/"
-                                        )
+                                        onClick: (e) => showBookCover(e, bookMetadataList.GiftLVL9999),
+                                        onTap: (e) => showBookCover(e, bookMetadataList.GiftLVL9999)
                                     }}
                                 />
                                 <Book
+                                    zIndex={2}
                                     side="right"
                                     position={{ x: 150, y: 40 }}
                                     thickness={15}
@@ -138,30 +181,56 @@ export function BookShelf(){
                                         front: 0xff6666
                                     }}
                                     event={{
-                                        onClick: (e) => showBookCover(
-                                            e, 
-                                            "Chronicles of an Aristocrat Reborn in Another World", 
-                                            "https://comick.io/comic/tensei-kizoku-no-isekai-boukenroku-jichou-wo-shiranai-kamigami-no-shito"
-                                        ),
-                                        onTap: () => showBookCover(
-                                            e, 
-                                            "Chronicles of an Aristocrat Reborn in Another World", 
-                                            "https://comick.io/comic/tensei-kizoku-no-isekai-boukenroku-jichou-wo-shiranai-kamigami-no-shito"
-                                        )
+                                        onClick: (e) => showBookCover(e, bookMetadataList.ChroniclesAristocratIsekai),
+                                        onTap: (e) => showBookCover(e, bookMetadataList.ChroniclesAristocratIsekai)
+                                    }}
+                                />
+                                <Book
+                                    zIndex={1}
+                                    side="right"
+                                    position={{ x: 170, y: 40 }}
+                                    thickness={35}
+                                    height={80} 
+                                    color={{
+                                        cover: 0x00ff00,
+                                        spine: 0x008000,
+                                        front: 0x66ff66
+                                    }}
+                                    event={{
+                                        onClick: (e) => showBookCover(e, bookMetadataList.HangingOutWithAGamerGirl),
+                                        onTap: (e) => showBookCover(e, bookMetadataList.HangingOutWithAGamerGirl)
+                                    }}
+                                />
+                                <Book
+                                    zIndex={1}
+                                    side="right"
+                                    position={{ x: 220, y: 40 }}
+                                    thickness={15}
+                                    height={80} 
+                                    color={{
+                                        cover: 0xffff00,
+                                        spine: 0x808000,
+                                        front: 0xffbb66
+                                    }}
+                                    event={{
+                                        onClick: (e) => showBookCover(e, bookMetadataList.SOLInvicibleIsekaid),
+                                        onTap: (e) => showBookCover(e, bookMetadataList.SOLInvicibleIsekaid)
                                     }}
                                 />
                             </pixiContainer>
                         </pixiContainer>
                     }
                 </Application>
-                <dialog id="link-dialog" style={{ top: `${dialogPos.y}px`, left: `${dialogPos.x}px` }} >
-                    <div className="w-[10vw]">
-                        <a href={bookMetadata.link} target="_blank">{bookMetadata.title}</a>
+                <dialog id="link-dialog" className="p-2 rounded-md" style={{ top: `${dialogPos.y}px`, left: `${dialogPos.x}px` }} >
+                    <div className="size-fit text-center flex flex-col gap-4">
+                        <h1 className="text-sky-500 text-sm md:text-lg">{bookMetadata.title}</h1>
+                        <button className="text-xs md:text-base text-neutral-800" onClick={openBook}>« Read Now »</button>
+                        <a className="text-xs md:text-sm text-neutral-400" href={bookMetadata.link} target="_blank" onClick={() => document.getElementById("link-dialog").close()}>« Read Online »</a>
                     </div>
                 </dialog>
             </div>
-            <div className="text-white" style={{ position: "absolute", bottom: 0, left: 0 }}>
-                Sorry for the inconvenience, but I can&apos;t really embed manga iframe to this site. It&apos;s about copyright infringement stuff.
+            <div className="text-white sm:text-xs" style={{ position: "absolute", bottom: 0, left: 0 }}>
+                Sorry for the inconvenience, but not all books on the shelf you can read on iframe on this site, since some sites don&apos;t allow embedding their content.
             </div>
         </>
     )

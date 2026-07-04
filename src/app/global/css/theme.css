@@ -1,4 +1,4 @@
-@import 'tailwindcss/utilities' layer(utilities);
+@import "tailwindcss/utilities" layer(utilities);
 @reference "tailwindcss";
 
 @config "../../../../tailwind.config.js";
